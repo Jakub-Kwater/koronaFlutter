@@ -10,7 +10,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Map passedData;
   List<Country> countryList = [];
-  List<Country> filteredCountryList = [];
+  String query = '';
 
 
   @override
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     passedData = ModalRoute.of(context).settings.arguments;
     countryList = passedData['list'];
 
-    filteredCountryList=countryList;
+    countryList = countryList.where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList();
 
 
 
@@ -44,14 +44,15 @@ class _MainScreenState extends State<MainScreen> {
             ),
             child:
             TextField(
+//              controller: myController,
               style: TextStyle(
                 fontSize: 20.0,
               ),
 
 
-              onChanged: (String string){
+              onChanged: (text){
                 setState(() {
-                  filteredCountryList = countryList.where((element) => element.name.toLowerCase().contains(string.toLowerCase())).toList();
+                  query = text;
                 });
               },
 
@@ -76,7 +77,7 @@ class _MainScreenState extends State<MainScreen> {
 
           Expanded( //listView won't show if it is not wrapped in a expanded widget
             child: ListView.builder(
-              itemCount: filteredCountryList.length,
+              itemCount: countryList.length,
               itemBuilder: (context, index){
 
 
@@ -95,17 +96,17 @@ class _MainScreenState extends State<MainScreen> {
 
                              children: [
                                Text(
-                                 filteredCountryList[index].name,
+                                 countryList[index].name,
                                  style: TextStyle(
                                    fontWeight: FontWeight.bold,
                                    fontSize: 20.0,
                                  ),
                                ),
                                SizedBox(height: 20.0),
-                               Text('Date: ${filteredCountryList[index].date}',
+                               Text('Date: ${countryList[index].date}',
                                ),
                                SizedBox(height: 20.0),
-                               Text('New cases: ${filteredCountryList[index].cases}',
+                               Text('New cases: ${countryList[index].cases}',
                                   style: TextStyle(
                                     fontSize: 15.0,
                                   ),
